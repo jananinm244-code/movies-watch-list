@@ -1,0 +1,1239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>WatchList - Movie Tracker</title>
+
+<style>
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: #141414;
+    color: white;
+}
+
+
+.navbar {
+    height: 70px;
+    background: linear-gradient(to bottom, #000000, #141414);
+    display: flex;
+    align-items: center;
+    padding: 0 5%;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.logo {
+    color: #e50914;
+    font-size: 30px;
+    font-weight: bold;
+    letter-spacing: -1px;
+    margin-right: 45px;
+}
+
+.nav-links {
+    display: flex;
+    gap: 25px;
+}
+
+.nav-links a {
+    color: #ddd;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.nav-links a:hover {
+    color: white;
+}
+
+.nav-right {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.search-box {
+    background: #222;
+    border: 1px solid #555;
+    color: white;
+    padding: 10px 15px;
+    border-radius: 4px;
+    width: 230px;
+    outline: none;
+}
+
+.search-box:focus {
+    border-color: #e50914;
+}
+
+.profile {
+    width: 35px;
+    height: 35px;
+    background: #e50914;
+    border-radius: 4px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+}
+
+
+.hero {
+    min-height: 470px;
+    padding: 90px 7%;
+    display: flex;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+
+    background:
+        linear-gradient(
+            90deg,
+            #141414 0%,
+            rgba(20,20,20,0.9) 35%,
+            rgba(20,20,20,0.4) 70%,
+            #141414 100%
+        ),
+        linear-gradient(
+            0deg,
+            #141414 0%,
+            transparent 35%
+        );
+}
+
+.hero-content {
+    max-width: 600px;
+    z-index: 2;
+}
+
+.hero-label {
+    color: #e50914;
+    font-weight: bold;
+    letter-spacing: 2px;
+    margin-bottom: 15px;
+}
+
+.hero h1 {
+    font-size: 55px;
+    line-height: 1.05;
+    margin-bottom: 20px;
+}
+
+.hero p {
+    color: #ccc;
+    font-size: 17px;
+    line-height: 1.6;
+    margin-bottom: 25px;
+}
+
+.hero-buttons {
+    display: flex;
+    gap: 12px;
+}
+
+.btn {
+    border: none;
+    padding: 12px 25px;
+    border-radius: 4px;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.btn-primary {
+    background: white;
+    color: black;
+}
+
+.btn-primary:hover {
+    background: #ddd;
+}
+
+.btn-secondary {
+    background: rgba(80,80,80,0.8);
+    color: white;
+}
+
+.btn-secondary:hover {
+    background: rgba(100,100,100,0.9);
+}
+
+
+.container {
+    padding: 10px 5% 50px;
+}
+
+.section-title {
+    font-size: 24px;
+    margin: 35px 0 20px;
+}
+
+
+.stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.stat {
+    background: #1f1f1f;
+    border-radius: 6px;
+    padding: 20px;
+    border-left: 4px solid #e50914;
+}
+
+.stat h3 {
+    color: #aaa;
+    font-size: 13px;
+    margin-bottom: 8px;
+}
+
+.stat span {
+    font-size: 28px;
+    font-weight: bold;
+}
+
+
+.filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 25px;
+}
+
+.filter-btn {
+    background: #2a2a2a;
+    color: #ddd;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.filter-btn:hover,
+.filter-btn.active {
+    background: #e50914;
+    color: white;
+}
+
+
+.movie-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+    gap: 22px;
+}
+
+.movie-card {
+    background: #1f1f1f;
+    border-radius: 7px;
+    overflow: hidden;
+    transition: 0.3s;
+    position: relative;
+}
+
+.movie-card:hover {
+    transform: scale(1.04);
+    z-index: 5;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.7);
+}
+
+.poster {
+    height: 280px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    text-align: center;
+    font-size: 24px;
+    font-weight: bold;
+    background: linear-gradient(135deg, #333, #111);
+}
+
+.poster span {
+    color: white;
+    text-shadow: 0 2px 8px black;
+}
+
+.movie-info {
+    padding: 15px;
+}
+
+.movie-title {
+    font-size: 17px;
+    font-weight: bold;
+    margin-bottom: 7px;
+}
+
+.movie-meta {
+    color: #aaa;
+    font-size: 12px;
+    margin-bottom: 8px;
+}
+
+.rating {
+    color: #f5c518;
+    margin-bottom: 10px;
+}
+
+.status {
+    display: inline-block;
+    font-size: 11px;
+    padding: 5px 8px;
+    border-radius: 3px;
+    background: #333;
+    color: #ddd;
+}
+
+.card-buttons {
+    display: flex;
+    gap: 7px;
+    margin-top: 12px;
+}
+
+.small-btn {
+    flex: 1;
+    padding: 7px;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    background: #333;
+    color: white;
+    font-size: 11px;
+}
+
+.small-btn:hover {
+    background: #e50914;
+}
+
+
+.add-section {
+    background: #1f1f1f;
+    padding: 25px;
+    border-radius: 7px;
+    margin-top: 45px;
+}
+
+.add-section h2 {
+    margin-bottom: 20px;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+}
+
+.input,
+select,
+textarea {
+    width: 100%;
+    padding: 12px;
+    background: #2a2a2a;
+    border: 1px solid #444;
+    color: white;
+    border-radius: 4px;
+    outline: none;
+}
+
+textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+
+.input:focus,
+select:focus,
+textarea:focus {
+    border-color: #e50914;
+}
+
+.full {
+    grid-column: 1 / -1;
+}
+
+.add-btn {
+    background: #e50914;
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.add-btn:hover {
+    background: #b20710;
+}
+
+
+.empty {
+    text-align: center;
+    color: #777;
+    padding: 50px;
+    grid-column: 1 / -1;
+}
+
+
+footer {
+    background: #000;
+    padding: 30px 5%;
+    color: #777;
+    margin-top: 50px;
+    text-align: center;
+}
+
+
+@media(max-width: 800px) {
+
+    .nav-links {
+        display: none;
+    }
+
+    .search-box {
+        width: 150px;
+    }
+
+    .hero h1 {
+        font-size: 40px;
+    }
+
+    .stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .full {
+        grid-column: auto;
+    }
+}
+
+@media(max-width: 500px) {
+
+    .navbar {
+        padding: 0 15px;
+    }
+
+    .logo {
+        font-size: 23px;
+        margin-right: 10px;
+    }
+
+    .search-box {
+        width: 120px;
+    }
+
+    .hero {
+        padding: 70px 25px;
+    }
+
+    .hero h1 {
+        font-size: 34px;
+    }
+
+    .stats {
+        grid-template-columns: 1fr;
+    }
+
+    .movie-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+    }
+
+    .poster {
+        height: 220px;
+        font-size: 18px;
+    }
+}
+
+</style>
+</head>
+
+<body>
+
+
+<nav class="navbar">
+
+    <div class="logo">WATCHLIST</div>
+
+    <div class="nav-links">
+        <a href="#">Home</a>
+        <a href="#movies">Movies</a>
+        <a href="#add">Add Movie</a>
+    </div>
+
+    <div class="nav-right">
+
+        <input
+            type="text"
+            id="search"
+            class="search-box"
+            placeholder="Search movies..."
+            onkeyup="displayMovies()"
+        >
+
+        <div class="profile">J</div>
+
+    </div>
+
+</nav>
+
+
+
+<section class="hero">
+
+    <div class="hero-content">
+
+        <div class="hero-label">YOUR PERSONAL MOVIE LIBRARY</div>
+
+        <h1>What will you watch today?</h1>
+
+        <p>
+            Keep track of your favourite movies, discover stories
+            worth watching and build your personal collection.
+        </p>
+
+        <div class="hero-buttons">
+
+            <button class="btn btn-primary" onclick="scrollToMovies()">
+                ▶ Browse Movies
+            </button>
+
+            <button class="btn btn-secondary" onclick="scrollToAdd()">
+                + Add Movie
+            </button>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<main class="container">
+
+
+    <h2 class="section-title">My WatchList</h2>
+
+    <div class="stats">
+
+        <div class="stat">
+            <h3>TOTAL MOVIES</h3>
+            <span id="total">0</span>
+        </div>
+
+        <div class="stat">
+            <h3>WANT TO WATCH</h3>
+            <span id="want">0</span>
+        </div>
+
+        <div class="stat">
+            <h3>WATCHING</h3>
+            <span id="watching">0</span>
+        </div>
+
+        <div class="stat">
+            <h3>COMPLETED</h3>
+            <span id="completed">0</span>
+        </div>
+
+    </div>
+
+
+    <section id="movies">
+
+        <h2 class="section-title">Popular in Your WatchList</h2>
+
+        <div class="filters">
+
+            <button class="filter-btn active"
+                onclick="setFilter('All', this)">
+                All
+            </button>
+
+            <button class="filter-btn"
+                onclick="setFilter('Want to Watch', this)">
+                Want to Watch
+            </button>
+
+            <button class="filter-btn"
+                onclick="setFilter('Watching', this)">
+                Watching
+            </button>
+
+            <button class="filter-btn"
+                onclick="setFilter('Completed', this)">
+                Completed
+            </button>
+
+        </div>
+
+        <div id="movieGrid" class="movie-grid"></div>
+
+    </section>
+
+
+    <section id="add" class="add-section">
+
+        <h2>➕ Add a Movie</h2>
+
+        <div class="form-grid">
+
+            <input
+                id="title"
+                class="input"
+                placeholder="Movie title"
+            >
+
+            <input
+                id="genre"
+                class="input"
+                placeholder="Genre"
+            >
+
+            <input
+                id="year"
+                class="input"
+                type="number"
+                placeholder="Release year"
+            >
+
+            <select id="status">
+
+                <option>Want to Watch</option>
+                <option>Watching</option>
+                <option>Completed</option>
+
+            </select>
+
+            <select id="rating">
+
+                <option value="0">No Rating</option>
+                <option value="1">⭐ 1</option>
+                <option value="2">⭐ 2</option>
+                <option value="3">⭐ 3</option>
+                <option value="4">⭐ 4</option>
+                <option value="5">⭐ 5</option>
+
+            </select>
+
+            <input
+                id="poster"
+                class="input"
+                placeholder="Poster emoji e.g. 🎬"
+            >
+
+            <textarea
+                id="notes"
+                class="full"
+                placeholder="Your notes / review..."
+            ></textarea>
+
+            <button
+                class="add-btn full"
+                onclick="addMovie()">
+                Add to WatchList
+            </button>
+
+        </div>
+
+    </section>
+
+</main>
+
+<footer>
+
+    <p>© 2026 WatchList • Your Personal Movie Tracker</p>
+
+</footer>
+
+
+<script>
+
+
+
+const defaultMovies = [
+
+{
+    title: "Dead Poets Society",
+    genre: "Drama",
+    year: 1989,
+    status: "Completed",
+    rating: 5,
+    poster: "🎞️",
+    notes: "Carpe Diem."
+},
+
+{
+    title: "The Pursuit of Happyness",
+    genre: "Drama",
+    year: 2006,
+    status: "Completed",
+    rating: 5,
+    poster: "🌟",
+    notes: "An inspiring story about never giving up."
+},
+
+{
+    title: "Tangled",
+    genre: "Animation",
+    year: 2010,
+    status: "Completed",
+    rating: 5,
+    poster: "👑",
+    notes: "A beautiful Disney adventure."
+},
+
+{
+    title: "Good Will Hunting",
+    genre: "Drama",
+    year: 1997,
+    status: "Want to Watch",
+    rating: 0,
+    poster: "🧠",
+    notes: ""
+},
+
+{
+    title: "Little Women",
+    genre: "Drama",
+    year: 2019,
+    status: "Want to Watch",
+    rating: 0,
+    poster: "🌸",
+    notes: ""
+},
+
+{
+    title: "Forrest Gump",
+    genre: "Drama",
+    year: 1994,
+    status: "Completed",
+    rating: 5,
+    poster: "🏃",
+    notes: "Life is full of unexpected journeys."
+},
+
+{
+    title: "The Secret Life of Walter Mitty",
+    genre: "Adventure",
+    year: 2013,
+    status: "Want to Watch",
+    rating: 0,
+    poster: "🌎",
+    notes: ""
+},
+
+{
+    title: "About Time",
+    genre: "Romance",
+    year: 2013,
+    status: "Want to Watch",
+    rating: 0,
+    poster: "⏰",
+    notes: ""
+},
+
+{
+    title: "The Fault in Our Stars",
+    genre: "Romance",
+    year: 2014,
+    status: "Want to Watch",
+    rating: 0,
+    poster: "💫",
+    notes: ""
+},
+
+{
+    title: "10 Things I Hate About You",
+    genre: "Romance",
+    year: 1999,
+    status: "Want to Watch",
+    rating: 0,
+    poster: "❤️",
+    notes: ""
+},
+
+{
+    title: "Flipped",
+    genre: "Romance",
+    year: 2010,
+    status: "Want to Watch",
+    rating: 0,
+    poster: "🌻",
+    notes: ""
+},
+
+{
+    title: "Wonder",
+    genre: "Drama",
+    year: 2017,
+    status: "Want to Watch",
+    rating: 0,
+    poster: "⭐",
+    notes: ""
+},
+
+{
+    title: "Ratatouille",
+    genre: "Animation",
+    year: 2007,
+    status: "Completed",
+    rating: 5,
+    poster: "🐭",
+    notes: "Anyone can cook."
+},
+
+{
+    title: "Up",
+    genre: "Animation",
+    year: 2009,
+    status: "Completed",
+    rating: 5,
+    poster: "🎈",
+    notes: "A beautiful adventure."
+},
+
+{
+    title: "Coco",
+    genre: "Animation",
+    year: 2017,
+    status: "Want to Watch",
+    rating: 0,
+    poster: "🎸",
+    notes: ""
+},
+
+{
+    title: "How to Train Your Dragon",
+    genre: "Animation",
+    year: 2010,
+    status: "Completed",
+    rating: 5,
+    poster: "🐉",
+    notes: "A great friendship story."
+},
+
+{
+    title: "The Perks of Being a Wallflower",
+    genre: "Coming of Age",
+    year: 2012,
+    status: "Want to Watch",
+    rating: 0,
+    poster: "📖",
+    notes: ""
+},
+
+{
+    title: "Lady Bird",
+    genre: "Coming of Age",
+    year: 2017,
+    status: "Want to Watch",
+    rating: 0,
+    poster: "🕊️",
+    notes: ""
+},
+
+{
+    title: "La La Land",
+    genre: "Musical",
+    year: 2016,
+    status: "Want to Watch",
+    rating: 0,
+    poster: "🎹",
+    notes: ""
+},
+
+{
+    title: "Pride & Prejudice",
+    genre: "Romance",
+    year: 2005,
+    status: "Want to Watch",
+    rating: 0,
+    poster: "🌹",
+    notes: ""
+}
+
+];
+
+
+
+let movies = JSON.parse(localStorage.getItem("watchlistMovies"));
+
+if (!movies || movies.length === 0) {
+    movies = defaultMovies;
+    saveMovies();
+}
+
+
+
+function saveMovies() {
+
+    localStorage.setItem(
+        "watchlistMovies",
+        JSON.stringify(movies)
+    );
+
+}
+
+
+
+function displayMovies() {
+
+    const grid = document.getElementById("movieGrid");
+
+    const searchText =
+        document.getElementById("search")
+        .value
+        .toLowerCase();
+
+    let filteredMovies = movies.filter(movie => {
+
+        const matchesSearch =
+            movie.title.toLowerCase()
+            .includes(searchText) ||
+            movie.genre.toLowerCase()
+            .includes(searchText);
+
+        const matchesFilter =
+            currentFilter === "All" ||
+            movie.status === currentFilter;
+
+        return matchesSearch && matchesFilter;
+
+    });
+
+
+    grid.innerHTML = "";
+
+
+    if (filteredMovies.length === 0) {
+
+        grid.innerHTML =
+        `<div class="empty">
+            <h3>No movies found 🎬</h3>
+            <p>Try another search or add a new movie.</p>
+        </div>`;
+
+        updateStats();
+        return;
+    }
+
+
+    filteredMovies.forEach((movie) => {
+
+        const realIndex = movies.indexOf(movie);
+
+        let stars = "";
+
+        if (movie.rating > 0) {
+
+            stars = "⭐".repeat(movie.rating);
+
+        } else {
+
+            stars = "No rating";
+
+        }
+
+
+        const card = document.createElement("div");
+
+        card.className = "movie-card";
+
+
+        card.innerHTML = `
+
+            <div class="poster">
+
+                <span>
+                    ${movie.poster || "🎬"}
+                </span>
+
+            </div>
+
+
+            <div class="movie-info">
+
+                <div class="movie-title">
+                    ${escapeHTML(movie.title)}
+                </div>
+
+                <div class="movie-meta">
+                    ${escapeHTML(movie.genre)}
+                    •
+                    ${movie.year || "N/A"}
+                </div>
+
+                <div class="rating">
+                    ${stars}
+                </div>
+
+                <span class="status">
+                    ${movie.status}
+                </span>
+
+                <div class="card-buttons">
+
+                    <button
+                        class="small-btn"
+                        onclick="changeStatus(${realIndex})">
+                        Status
+                    </button>
+
+                    <button
+                        class="small-btn"
+                        onclick="deleteMovie(${realIndex})">
+                        Delete
+                    </button>
+
+                </div>
+
+            </div>
+
+        `;
+
+
+        grid.appendChild(card);
+
+    });
+
+
+    updateStats();
+
+}
+
+
+
+function addMovie() {
+
+    const title =
+        document.getElementById("title").value.trim();
+
+    const genre =
+        document.getElementById("genre").value.trim();
+
+    const year =
+        document.getElementById("year").value;
+
+    const status =
+        document.getElementById("status").value;
+
+    const rating =
+        Number(document.getElementById("rating").value);
+
+    const poster =
+        document.getElementById("poster").value.trim()
+        || "🎬";
+
+    const notes =
+        document.getElementById("notes").value.trim();
+
+
+    if (!title) {
+
+        alert("Please enter a movie title.");
+
+        return;
+
+    }
+
+
+    movies.push({
+
+        title,
+        genre: genre || "Movie",
+        year: year || "N/A",
+        status,
+        rating,
+        poster,
+        notes
+
+    });
+
+
+    saveMovies();
+
+    clearForm();
+
+    displayMovies();
+
+    alert("Movie added to your WatchList! 🎬");
+
+}
+
+
+
+function deleteMovie(index) {
+
+    const movie = movies[index];
+
+    const confirmDelete =
+        confirm(
+            `Remove "${movie.title}" from WatchList?`
+        );
+
+
+    if (!confirmDelete) return;
+
+
+    movies.splice(index, 1);
+
+    saveMovies();
+
+    displayMovies();
+
+}
+
+
+
+function changeStatus(index) {
+
+    const statuses = [
+        "Want to Watch",
+        "Watching",
+        "Completed"
+    ];
+
+
+    const current =
+        statuses.indexOf(movies[index].status);
+
+
+    const next =
+        (current + 1) % statuses.length;
+
+
+    movies[index].status =
+        statuses[next];
+
+
+    saveMovies();
+
+    displayMovies();
+
+}
+
+
+
+function setFilter(filter, button) {
+
+    currentFilter = filter;
+
+
+    document
+        .querySelectorAll(".filter-btn")
+        .forEach(btn => {
+
+            btn.classList.remove("active");
+
+        });
+
+
+    button.classList.add("active");
+
+    displayMovies();
+
+}
+
+
+
+function updateStats() {
+
+    document.getElementById("total").textContent =
+        movies.length;
+
+
+    document.getElementById("want").textContent =
+        movies.filter(
+            movie => movie.status === "Want to Watch"
+        ).length;
+
+
+    document.getElementById("watching").textContent =
+        movies.filter(
+            movie => movie.status === "Watching"
+        ).length;
+
+
+    document.getElementById("completed").textContent =
+        movies.filter(
+            movie => movie.status === "Completed"
+        ).length;
+
+}
+
+
+
+function clearForm() {
+
+    document.getElementById("title").value = "";
+
+    document.getElementById("genre").value = "";
+
+    document.getElementById("year").value = "";
+
+    document.getElementById("poster").value = "";
+
+    document.getElementById("notes").value = "";
+
+    document.getElementById("rating").value = "0";
+
+    document.getElementById("status").value =
+        "Want to Watch";
+
+}
+
+
+function scrollToMovies() {
+
+    document
+        .getElementById("movies")
+        .scrollIntoView({
+            behavior: "smooth"
+        });
+
+}
+
+
+function scrollToAdd() {
+
+    document
+        .getElementById("add")
+        .scrollIntoView({
+            behavior: "smooth"
+        });
+
+}
+
+
+function escapeHTML(text) {
+
+    const div = document.createElement("div");
+
+    div.textContent = text;
+
+    return div.innerHTML;
+
+}
+
+
+displayMovies();
+
+</script>
+
+</body>
+</html>
